@@ -1,8 +1,15 @@
+import { TodoItem } from "@/cmps/TodoItem";
 import { prisma } from "@/db";
+import { Todo } from "@prisma/client";
 import Link from "next/link";
 
+async function getTodos(): Promise<Todo[]> {
+  // await prisma.todo.create({data: {title: 'tast', complete: false}})
+  return prisma.todo.findMany()
+}
+
 export default async function Home() {
-  const todos = await prisma.todo.findMany()
+  const todos = await getTodos()
   return (
     <>
       <header className="flex justify-between items-center mb-4">
@@ -11,7 +18,7 @@ export default async function Home() {
       </header>
       <ul className="pl-4">
         {todos.map(todo => (
-          <li key={todo.id}>{todo.title}</li>
+          <TodoItem key={todo.id} {...todo} />
         ))}
       </ul>
     </>
